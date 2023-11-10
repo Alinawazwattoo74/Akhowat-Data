@@ -1,4 +1,4 @@
-name: Your Workflow Name
+name: Three-stage workflow
 
 on:
   push:
@@ -6,76 +6,42 @@ on:
       - main
 
 jobs:
-  - job: Job1
-    displayName: First Job
-    continueOnError: true
-    workspace:
-      clean: outputs
+  stage_1:
+    name: Stage 1
+    runs-on: ubuntu-latest
+
     steps:
-      - script: echo step 1 
-        displayName: step 1
-      - script: echo step 2 
-        displayName: step 2
+      - job_1:
+          name: Job 1
+          run: echo "Hello Code!"
+      - job_2:
+          name: Job 2
+          run: echo "Hello Code!"
 
-  - job: Job2
-    displayName: Second Job
-    continueOnError: true
-    workspace:
-      clean: outputs
+  stage_2:
+    name: Stage 2
+    needs:
+      - stage_1
+    runs-on: macos-latest
+
     steps:
-      - script: echo step 1 
-        displayName: step 1
-      - script: echo step 2 
-        displayName: step 2
+      - job_3:
+          name: Job 3
+          run: echo "Hello Code!"
+      - job_4:
+          name: Job 4
+          run: echo "Hello Code!"
 
-- stage: Stage_2
-  dependsOn: Stage_1
-  condition: succeeded('Stage_1')
-  jobs:
-    - job: Job1
-      displayName: First Job
-      continueOnError: true
-      workspace:
-        clean: outputs
-      steps:
-        - script: echo step 1 
-          displayName: step 1
-        - script: echo step 2 
-          displayName: step 2
+  stage_3:
+    name: Stage 3
+    needs:
+      - stage_2
+    runs-on: windows-latest
 
-    - job: Job2
-      displayName: Second Job
-      continueOnError: true
-      workspace:
-        clean: outputs
-      steps:
-        - script: echo step 1 
-          displayName: step 1
-        - script: echo step 2 
-          displayName: step 2
-
-- stage: Stage_3
-  dependsOn: Stage_2
-  condition: succeeded('Stage_2')
-  jobs:
-    - job: Job1
-      displayName: First Job
-      continueOnError: true
-      workspace:
-        clean: outputs
-      steps:
-        - script: echo step 1 
-          displayName: step 1
-        - script: echo step 2 
-          displayName: step 2
-
-    - job: Job2
-      displayName: Second Job
-      continueOnError: true
-      workspace:
-        clean: outputs
-      steps:
-        - script: echo step 1 
-          displayName: step 1
-        - script: echo step 2 
-          displayName: step 2
+    steps:
+      - job_5:
+          name: Job 5
+          run: echo "Hello Code!"
+      - job_6:
+          name: Job 6
+          run: echo "Hello Code!"
