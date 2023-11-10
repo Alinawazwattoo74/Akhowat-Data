@@ -1,4 +1,4 @@
-name: Three-stage workflow
+name: Three-stage workflow with uses and run keys
 
 on:
   push:
@@ -11,12 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
       - job_1:
           name: Job 1
-          run: echo "Hello Code!"
-      - job_2:
-          name: Job 2
-          run: echo "Hello Code!"
+          run: echo "Hello Code from Ubuntu!"
 
   stage_2:
     name: Stage 2
@@ -25,12 +23,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
       - job_3:
           name: Job 3
-          run: echo "Hello Code!"
-      - job_4:
-          name: Job 4
-          run: echo "Hello Code!"
+          run: dotnet test
 
   stage_3:
     name: Stage 3
@@ -39,9 +37,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
       - job_5:
           name: Job 5
-          run: echo "Hello Code!"
-      - job_6:
-          name: Job 6
-          run: echo "Hello Code!"
+          run: npm run test
